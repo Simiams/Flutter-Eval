@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../bo/cart.dart';
@@ -15,9 +16,6 @@ class CartPage extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        //Si j'ai plus de 0 éléments dans le panier j'affiche la liste
-        //des éléments dans le panier
-        //Sinon j'affiche le Widget EmptyCart qui affiche "Votre Panier est vide"
         child: context.watch<Cart>().items.isNotEmpty
             ? const ListCart()
             : const EmptyCart(),
@@ -33,7 +31,7 @@ class EmptyCart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -63,8 +61,6 @@ class ListCart extends StatelessWidget {
                     Text(cart.priceTotalInEuro())
                   ],
                 ),
-                //Ajouter la ligne de total (Row Votre panier total est de)
-                //Avec le montant
                 Flexible(
                   child: ListView.builder(
                       itemCount: cart.items.length,
@@ -76,7 +72,6 @@ class ListCart extends StatelessWidget {
                               style:
                                   const TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            //Supprimer un élément du panier
                             trailing: TextButton(
                               child: const Text("SUPPRIMER"),
                               onPressed: () => context
@@ -85,6 +80,20 @@ class ListCart extends StatelessWidget {
                             ),
                           )),
                 ),
+                Row(
+                  children: [
+                    ElevatedButton(
+                      style: TextButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                            side: BorderSide(
+                                color: Theme.of(context).colorScheme.outline)),
+                      ),
+                      child: const Text("PAYER"),
+                      onPressed: () => context.go('/cart/payment'),
+                    ),
+                  ],
+                )
               ],
             ));
   }
